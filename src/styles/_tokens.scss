@@ -1,0 +1,44 @@
+:root {
+  --color-primary:        oklch(65% 0.22 260);
+  --color-primary-glow:   oklch(65% 0.22 260 / 30%);
+  --color-secondary:      oklch(70% 0.18 310);
+  --color-success:        oklch(72% 0.20 150);
+  --color-warning:        oklch(78% 0.19 85);
+  --color-danger:         oklch(60% 0.24 25);
+  --color-info:           oklch(68% 0.17 230);
+  --color-neutral:        oklch(60% 0.02 260);
+
+  --glass-bg:             oklch(100% 0 0 / 8%);
+  --glass-border:         oklch(100% 0 0 / 15%);
+  --glass-shadow:         0 8px 32px oklch(0% 0 0 / 20%);
+  --glass-blur:           16px;
+
+  --radius-xs:            4px;
+  --radius-sm:            8px;
+  --radius-md:            16px;
+  --radius-lg:            24px;
+  --radius-xl:            32px;
+
+  --space-1:              4px;
+  --space-2:              8px;
+  --space-3:              12px;
+  --space-4:              16px;
+  --space-5:              20px;
+  --space-6:              24px;
+  --space-8:              32px;
+  --space-10:             40px;
+  --space-12:             48px;
+
+  --font-sans:            'Inter', system-ui, sans-serif;
+  --font-mono:            'JetBrains Mono', monospace;
+  --font-size-xs:         0.75rem;
+  --font-size-sm:         0.875rem;
+  --font-size-md:         1rem;
+  --font-size-lg:         1.125rem;
+  --font-size-xl:         1.25rem;
+  --font-size-2xl:        1.5rem;
+
+  --transition-fast:      150ms ease;
+  --transition-md:        250ms ease;
+  --transition-slow:      400ms ease;
+}

@@ -1,0 +1,25 @@
+[data-theme="light"] {
+  --bg-page:        oklch(96% 0.01 260);
+  --bg-surface:     oklch(99% 0.005 260 / 70%);
+  --bg-elevated:    oklch(100% 0 0 / 80%);
+  --text-primary:   oklch(20% 0.02 260);
+  --text-secondary: oklch(45% 0.02 260);
+  --text-muted:     oklch(60% 0.01 260);
+  --border-subtle:  oklch(85% 0.01 260 / 50%);
+  --mesh-color-1:   oklch(85% 0.12 280);
+  --mesh-color-2:   oklch(90% 0.10 200);
+  --mesh-color-3:   oklch(88% 0.08 320);
+}
+
+[data-theme="dark"] {
+  --bg-page:        oklch(12% 0.02 260);
+  --bg-surface:     oklch(18% 0.03 260 / 70%);
+  --bg-elevated:    oklch(22% 0.03 260 / 80%);
+  --text-primary:   oklch(95% 0.01 260);
+  --text-secondary: oklch(65% 0.02 260);
+  --text-muted:     oklch(50% 0.01 260);
+  --border-subtle:  oklch(40% 0.02 260 / 40%);
+  --mesh-color-1:   oklch(35% 0.15 280);
+  --mesh-color-2:   oklch(30% 0.12 200);
+  --mesh-color-3:   oklch(32% 0.10 320);
+}

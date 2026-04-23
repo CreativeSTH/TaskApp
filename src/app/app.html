@@ -1,0 +1,100 @@
+<div class="showcase">
+
+  <header class="showcase__header">
+    <div class="showcase__title">
+      <app-icon name="list-checks" size="lg" />
+      <h1>Design System — Atoms</h1>
+    </div>
+    <button appBtn variant="ghost" size="sm" (click)="toggleTheme()">
+      <app-icon [name]="theme() === 'dark' ? 'sun' : 'moon'" size="sm" />
+      {{ theme() === 'dark' ? 'Light' : 'Dark' }}
+    </button>
+  </header>
+
+  <section class="section">
+    <h2 class="section__title">Button</h2>
+    <div class="row">
+      <button appBtn variant="primary">Primary</button>
+      <button appBtn variant="secondary">Secondary</button>
+      <button appBtn variant="ghost">Ghost</button>
+      <button appBtn variant="danger">Danger</button>
+    </div>
+    <div class="row">
+      <button appBtn variant="primary" size="sm">Small</button>
+      <button appBtn variant="primary" size="md">Medium</button>
+      <button appBtn variant="primary" size="lg">Large</button>
+    </div>
+    <div class="row">
+      <button appBtn variant="primary" [loading]="true">Loading</button>
+      <button appBtn variant="secondary" [disabled]="true">Disabled</button>
+      <button appBtn variant="primary">
+        <app-icon name="plus" size="sm" />
+        New Task
+      </button>
+      <button appBtn variant="danger">
+        <app-icon name="trash-2" size="sm" />
+        Delete
+      </button>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section__title">Badge</h2>
+    <div class="row">
+      <app-badge label="New" color="info" />
+      <app-badge label="Active" color="warning" />
+      <app-badge label="Resolved" color="success" />
+      <app-badge label="Closed" color="neutral" />
+      <app-badge label="Error" color="danger" />
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section__title">Icon — Lucide</h2>
+    <div class="row row--wrap">
+      @for (icon of previewIcons; track icon) {
+        <div class="icon-item">
+          <app-icon [name]="icon" size="md" />
+          <span>{{ icon }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section__title">Spinner</h2>
+    <div class="row">
+      <app-spinner size="sm" />
+      <app-spinner size="md" />
+      <app-spinner size="lg" />
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section__title">Input</h2>
+    <div class="col">
+      <app-input placeholder="Normal input..." />
+      <app-input placeholder="Error state..." [hasError]="true" />
+      <app-input placeholder="Disabled..." [disabled]="true" />
+      <app-input type="date" />
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section__title">Textarea</h2>
+    <div class="col">
+      <app-textarea placeholder="Write your notes here..." />
+      <app-textarea placeholder="Error state..." [hasError]="true" />
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section__title">Checkbox</h2>
+    <div class="col">
+      <app-checkbox label="Unchecked" />
+      <app-checkbox label="Task completed" />
+      <app-checkbox label="Disabled" [disabled]="true" />
+    </div>
+  </section>
+
+</div>

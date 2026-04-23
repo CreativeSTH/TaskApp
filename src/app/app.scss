@@ -1,0 +1,87 @@
+@use 'styles/glass' as glass;
+
+:host {
+  display: block;
+  min-height: 100dvh;
+}
+
+.showcase {
+  @include glass.mesh-background;
+  min-height: 100dvh;
+  padding: 40px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 48px;
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--color-primary);
+  }
+}
+
+.section {
+  @include glass.glass-surface;
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  animation: liquid-entrance 0.4s linear(0, 0.6, 1, 1.02, 1) both;
+
+  &__title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  &:last-child { margin-bottom: 0; }
+  &--wrap { gap: 8px; }
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+}
+
+.icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 8px;
+  border-radius: var(--radius-sm);
+  background: oklch(100% 0 0 / 5%);
+  color: var(--text-secondary);
+  min-width: 72px;
+
+  span {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+}
