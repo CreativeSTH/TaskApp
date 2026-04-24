@@ -9,6 +9,9 @@
   --mesh-color-1:   oklch(85% 0.12 280);
   --mesh-color-2:   oklch(90% 0.10 200);
   --mesh-color-3:   oklch(88% 0.08 320);
+  --glass-bg:       oklch(100% 0 0 / 78%);
+  --glass-border:   oklch(78% 0.02 260 / 60%);
+  --glass-shadow:   0 1px 6px oklch(0% 0 0 / 7%);
 }
 
 [data-theme="dark"] {

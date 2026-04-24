@@ -46,6 +46,34 @@ export type BadgeColor = 'success' | 'warning' | 'info' | 'neutral' | 'danger';
       color: var(--text-secondary);
       border-color: oklch(60% 0.02 260 / 25%);
     }
+
+    :host-context([data-theme="dark"]) {
+      .badge--success {
+        background: oklch(72% 0.20 150 / 22%);
+        color: oklch(82% 0.20 150);
+        border-color: oklch(72% 0.20 150 / 52%);
+      }
+      .badge--warning {
+        background: oklch(78% 0.19 85 / 22%);
+        color: oklch(88% 0.18 85);
+        border-color: oklch(78% 0.19 85 / 52%);
+      }
+      .badge--info {
+        background: oklch(68% 0.17 230 / 22%);
+        color: oklch(80% 0.17 230);
+        border-color: oklch(68% 0.17 230 / 52%);
+      }
+      .badge--danger {
+        background: oklch(60% 0.24 25 / 22%);
+        color: oklch(78% 0.22 25);
+        border-color: oklch(60% 0.24 25 / 52%);
+      }
+      .badge--neutral {
+        background: oklch(60% 0.02 260 / 22%);
+        color: oklch(78% 0.02 260);
+        border-color: oklch(60% 0.02 260 / 42%);
+      }
+    }
   `],
 })
 export class BadgeComponent {

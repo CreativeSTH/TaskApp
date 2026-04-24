@@ -102,6 +102,16 @@ export type ButtonSize    = 'sm' | 'md' | 'lg';
         background: oklch(60% 0.24 25 / 25%);
       }
     }
+
+    :host-context([data-theme="dark"]):host(.btn--danger) {
+      background: oklch(60% 0.24 25 / 22%);
+      color: oklch(78% 0.22 25);
+      border-color: oklch(60% 0.24 25 / 50%);
+
+      &:hover:not([disabled]) {
+        background: oklch(60% 0.24 25 / 32%);
+      }
+    }
   `],
 })
 export class ButtonComponent {

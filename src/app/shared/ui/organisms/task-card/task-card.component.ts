@@ -238,7 +238,7 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       background: none;
       border: none;
       border-top: 1px solid var(--glass-border);
-      color: var(--text-muted);
+      color: var(--text-secondary);
       font-size: var(--font-size-xs);
       cursor: pointer;
       transition: color 150ms ease, background 150ms ease;
