@@ -1,15 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { Task } from '../../../../core/models/task.model';
 import { TaskStatusTagComponent } from '../../molecules/task-status-tag/task-status-tag.component';
 import { ButtonComponent } from '../../atoms/button/button.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
-import { SpinnerComponent } from '../../atoms/spinner/spinner.component';
-
 @Component({
   selector: 'app-task-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TaskStatusTagComponent, ButtonComponent, IconComponent, SpinnerComponent],
+  imports: [TaskStatusTagComponent, ButtonComponent, IconComponent],
   template: `
     <article class="card animate-liquid">
       <header class="card__header">
@@ -33,25 +31,25 @@ import { SpinnerComponent } from '../../atoms/spinner/spinner.component';
       </div>
 
       @if (task().notes.length > 0) {
-        @defer (on interaction; prefetch on idle) {
+        @if (showNotes()) {
           <div class="card__notes">
-            <p class="card__notes-label">
+            <button class="card__notes-label" (click)="showNotes.set(false)">
               <app-icon name="file-text" size="xs" />
               Notes
-            </p>
+              <app-icon name="chevron-up" size="xs" class="card__notes-chevron" />
+            </button>
             <ul class="card__notes-list">
               @for (note of task().notes; track $index) {
                 <li>{{ note }}</li>
               }
             </ul>
           </div>
-        } @placeholder {
-          <button class="card__notes-trigger">
+        } @else {
+          <button class="card__notes-trigger" (click)="showNotes.set(true)">
             <app-icon name="file-text" size="xs" />
             Show {{ task().notes.length }} {{ task().notes.length === 1 ? 'note' : 'notes' }}
+            <app-icon name="chevron-down" size="xs" />
           </button>
-        } @loading {
-          <div class="card__notes-loading"><app-spinner size="sm" /></div>
         }
       }
 
@@ -162,12 +160,23 @@ import { SpinnerComponent } from '../../atoms/spinner/spinner.component';
       display: flex;
       align-items: center;
       gap: 5px;
+      width: 100%;
       font-size: var(--font-size-xs);
       font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.06em;
       margin-bottom: 8px;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: color 150ms ease;
+
+      &:hover { color: var(--text-secondary); }
+
+      .card__notes-chevron { margin-left: auto; }
     }
 
     .card__notes-list {
@@ -208,14 +217,7 @@ import { SpinnerComponent } from '../../atoms/spinner/spinner.component';
       }
     }
 
-    .card__notes-loading {
-      display: flex;
-      justify-content: center;
-      padding: 12px;
-      border-top: 1px solid var(--glass-border);
-    }
-
-    .card__footer {
+.card__footer {
       display: flex;
       gap: 8px;
       padding: 12px 16px;
@@ -233,4 +235,6 @@ export class TaskCardComponent {
   protected currentState = computed(
     () => this.task().stateHistory.at(-1)?.state ?? 'new'
   );
+
+  protected showNotes = signal(false);
 }

@@ -34,7 +34,7 @@ export interface TaskStoreState {
   availableStates: StateDefinition[];
   loading: boolean;
   error: string | null;
-  currentPage: number;
+  columnPages: Record<TaskStateName, number>;
   pageSize: number;
   searchQuery: string;
 }

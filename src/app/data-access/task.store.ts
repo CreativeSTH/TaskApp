@@ -3,67 +3,66 @@ import { patchState, signalStore, withComputed, withMethods, withState } from '@
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { forkJoin, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
-import { StateDefinition, Task, TaskFormValue, TaskStoreState } from '../core/models/task.model';
+import { StateDefinition, Task, TaskFormValue, TaskStateName, TaskStoreState } from '../core/models/task.model';
 import { TaskService } from './task.service';
+
+const STATES: TaskStateName[] = ['new', 'active', 'resolved', 'closed'];
 
 const initialState: TaskStoreState = {
   tasks: [],
   availableStates: [],
   loading: false,
   error: null,
-  currentPage: 1,
-  pageSize: 5,
+  columnPages: { new: 1, active: 1, resolved: 1, closed: 1 },
+  pageSize: 3,
   searchQuery: '',
 };
+
+const filterTasks = (tasks: Task[], query: string): Task[] => {
+  const q = query.toLowerCase().trim();
+  return q
+    ? tasks.filter(t => t.title.toLowerCase().includes(q) || t.description.toLowerCase().includes(q))
+    : tasks;
+};
+
+const taskState = (task: Task): TaskStateName =>
+  task.stateHistory.at(-1)?.state ?? 'new';
 
 export const TaskStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withComputed(({ tasks, currentPage, pageSize, searchQuery }) => ({
-    filteredTasks: computed(() => {
-      const query = searchQuery().toLowerCase().trim();
-      if (!query) return tasks();
-      return tasks().filter(
-        t =>
-          t.title.toLowerCase().includes(query) ||
-          t.description.toLowerCase().includes(query)
+
+  withComputed(({ tasks, searchQuery }) => ({
+    tasksByColumn: computed(() => {
+      const filtered = filterTasks(tasks(), searchQuery());
+      return STATES.reduce(
+        (acc, s) => ({ ...acc, [s]: filtered.filter(t => taskState(t) === s) }),
+        {} as Record<TaskStateName, Task[]>
       );
     }),
-    paginatedTasks: computed(() => {
-      const query = searchQuery().toLowerCase().trim();
-      const filtered = !query
-        ? tasks()
-        : tasks().filter(
-            t =>
-              t.title.toLowerCase().includes(query) ||
-              t.description.toLowerCase().includes(query)
-          );
-      const start = (currentPage() - 1) * pageSize();
-      return filtered.slice(start, start + pageSize());
+    isEmpty: computed(() => filterTasks(tasks(), searchQuery()).length === 0),
+  })),
+
+  withComputed(({ tasksByColumn, columnPages, pageSize }) => ({
+    paginatedByColumn: computed(() => {
+      const byCol = tasksByColumn();
+      const pages = columnPages();
+      const size = pageSize();
+      return STATES.reduce((acc, s) => {
+        const start = (pages[s] - 1) * size;
+        return { ...acc, [s]: byCol[s].slice(start, start + size) };
+      }, {} as Record<TaskStateName, Task[]>);
     }),
-    totalPages: computed(() => {
-      const query = searchQuery().toLowerCase().trim();
-      const count = !query
-        ? tasks().length
-        : tasks().filter(
-            t =>
-              t.title.toLowerCase().includes(query) ||
-              t.description.toLowerCase().includes(query)
-          ).length;
-      return Math.max(1, Math.ceil(count / pageSize()));
-    }),
-    isEmpty: computed(() => {
-      const query = searchQuery().toLowerCase().trim();
-      const filtered = !query
-        ? tasks()
-        : tasks().filter(
-            t =>
-              t.title.toLowerCase().includes(query) ||
-              t.description.toLowerCase().includes(query)
-          );
-      return filtered.length === 0;
+    totalPagesByColumn: computed(() => {
+      const byCol = tasksByColumn();
+      const size = pageSize();
+      return STATES.reduce(
+        (acc, s) => ({ ...acc, [s]: Math.max(1, Math.ceil(byCol[s].length / size)) }),
+        {} as Record<TaskStateName, number>
+      );
     }),
   })),
+
   withMethods((store, taskService = inject(TaskService)) => ({
     init: rxMethod<void>(
       pipe(
@@ -98,13 +97,8 @@ export const TaskStore = signalStore(
           };
           return taskService.create(newTask).pipe(
             tapResponse({
-              next: task =>
-                patchState(store, {
-                  tasks: [...store.tasks(), task],
-                  loading: false,
-                }),
-              error: (err: Error) =>
-                patchState(store, { error: err.message, loading: false }),
+              next: task => patchState(store, { tasks: [...store.tasks(), task], loading: false }),
+              error: (err: Error) => patchState(store, { error: err.message, loading: false }),
             })
           );
         })
@@ -120,7 +114,7 @@ export const TaskStore = signalStore(
             ...task,
             stateHistory:
               newState && newState !== currentState
-                ? [...task.stateHistory, { state: newState as Task['stateHistory'][0]['state'], date: new Date().toISOString().split('T')[0] }]
+                ? [...task.stateHistory, { state: newState as TaskStateName, date: new Date().toISOString().split('T')[0] }]
                 : task.stateHistory,
           };
           return taskService.update(updatedTask).pipe(
@@ -130,8 +124,7 @@ export const TaskStore = signalStore(
                   tasks: store.tasks().map(t => (t.id === saved.id ? saved : t)),
                   loading: false,
                 }),
-              error: (err: Error) =>
-                patchState(store, { error: err.message, loading: false }),
+              error: (err: Error) => patchState(store, { error: err.message, loading: false }),
             })
           );
         })
@@ -149,20 +142,22 @@ export const TaskStore = signalStore(
                   tasks: store.tasks().filter(t => t.id !== id),
                   loading: false,
                 }),
-              error: (err: Error) =>
-                patchState(store, { error: err.message, loading: false }),
+              error: (err: Error) => patchState(store, { error: err.message, loading: false }),
             })
           )
         )
       )
     ),
 
-    setPage(page: number): void {
-      patchState(store, { currentPage: page });
+    setColumnPage(state: TaskStateName, page: number): void {
+      patchState(store, { columnPages: { ...store.columnPages(), [state]: page } });
     },
 
     setSearch(query: string): void {
-      patchState(store, { searchQuery: query, currentPage: 1 });
+      patchState(store, {
+        searchQuery: query,
+        columnPages: { new: 1, active: 1, resolved: 1, closed: 1 },
+      });
     },
   }))
 );

@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { AppNavbarComponent } from '../../../../shared/ui/organisms/app-navbar/app-navbar.component';
-import { PaginatorComponent } from '../../../../shared/ui/molecules/paginator/paginator.component';
 import { SpinnerComponent } from '../../../../shared/ui/atoms/spinner/spinner.component';
+import { KanbanTabsComponent } from '../../../../shared/ui/molecules/kanban-tabs/kanban-tabs.component';
+import { TaskStateName } from '../../../../core/models/task.model';
 
 @Component({
   selector: 'app-task-list-template',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AppNavbarComponent, PaginatorComponent, SpinnerComponent],
+  imports: [AppNavbarComponent, SpinnerComponent, KanbanTabsComponent],
   template: `
     <div class="layout">
       <app-navbar
@@ -17,27 +18,25 @@ import { SpinnerComponent } from '../../../../shared/ui/atoms/spinner/spinner.co
         (themeToggle)="themeToggle.emit()"
       />
 
+      <div class="layout__tabs">
+        <app-kanban-tabs
+          [selected]="selectedState()"
+          [countByState]="countByState()"
+          (select)="stateSelect.emit($event)"
+        />
+      </div>
+
       <main class="layout__main">
         @if (loading()) {
           <div class="layout__loading">
             <app-spinner size="lg" />
           </div>
         } @else {
-          <div class="layout__content">
+          <div class="layout__board">
             <ng-content />
           </div>
         }
       </main>
-
-      @if (!isEmpty() && !loading() && totalPages() > 1) {
-        <footer class="layout__footer">
-          <app-paginator
-            [currentPage]="currentPage()"
-            [totalPages]="totalPages()"
-            (pageChange)="pageChange.emit($event)"
-          />
-        </footer>
-      }
     </div>
   `,
   styles: [`
@@ -49,11 +48,18 @@ import { SpinnerComponent } from '../../../../shared/ui/atoms/spinner/spinner.co
       min-height: 100dvh;
     }
 
+    .layout__tabs {
+      display: none;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--glass-border);
+      background: oklch(100% 0 0 / 3%);
+      backdrop-filter: blur(12px);
+    }
+
     .layout__main {
       flex: 1;
-      padding: 32px 24px 24px;
-      container-type: inline-size;
-      container-name: main;
+      padding: 24px;
+      overflow: hidden;
     }
 
     .layout__loading {
@@ -63,41 +69,48 @@ import { SpinnerComponent } from '../../../../shared/ui/atoms/spinner/spinner.co
       min-height: 300px;
     }
 
-    .layout__content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr;
+    .layout__board {
+      display: flex;
       gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 16px;
+      align-items: flex-start;
+      justify-content: center;
+      min-height: calc(100dvh - 120px);
 
-      @container main (min-width: 640px) {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      scrollbar-width: thin;
+      scrollbar-color: var(--glass-border) transparent;
 
-      @container main (min-width: 960px) {
-        grid-template-columns: repeat(3, 1fr);
+      &::-webkit-scrollbar { height: 6px; }
+      &::-webkit-scrollbar-track { background: transparent; }
+      &::-webkit-scrollbar-thumb {
+        background: var(--glass-border);
+        border-radius: 999px;
       }
     }
 
-    .layout__footer {
-      padding: 16px 24px 32px;
-      display: flex;
-      justify-content: center;
-      border-top: 1px solid var(--glass-border);
-      background: oklch(100% 0 0 / 3%);
-      backdrop-filter: blur(12px);
+    @media (max-width: 767px) {
+      .layout__tabs { display: block; }
+
+      .layout__main { padding: 16px; }
+
+      .layout__board {
+        flex-direction: column;
+        overflow-x: visible;
+        gap: 0;
+        min-height: unset;
+      }
     }
   `],
 })
 export class TaskListTemplateComponent {
-  theme       = input<'dark' | 'light'>('dark');
-  loading     = input(false);
-  isEmpty     = input(false);
-  currentPage = input(1);
-  totalPages  = input(1);
+  theme         = input<'dark' | 'light'>('dark');
+  loading       = input(false);
+  selectedState = input<TaskStateName>('new');
+  countByState  = input<Record<TaskStateName, number>>({ new: 0, active: 0, resolved: 0, closed: 0 });
 
   search      = output<string>();
   newTask     = output<void>();
   themeToggle = output<void>();
-  pageChange  = output<number>();
+  stateSelect = output<TaskStateName>();
 }
