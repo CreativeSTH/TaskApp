@@ -8,5 +8,12 @@ export const routes: Routes = [
         m => m.TaskListPageComponent
       ),
   },
+  {
+    path: 'design-system',
+    loadComponent: () =>
+      import('./features/design-system/design-system.component').then(
+        m => m.DesignSystemComponent
+      ),
+  },
   { path: '**', redirectTo: '' },
 ];

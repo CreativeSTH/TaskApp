@@ -5,7 +5,7 @@ export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 export type ButtonSize    = 'sm' | 'md' | 'lg';
 
 @Component({
-  selector: 'button[appBtn]',
+  selector: 'button[appBtn], a[appBtn]',
   standalone: true,
   imports: [SpinnerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,8 +18,9 @@ export type ButtonSize    = 'sm' | 'md' | 'lg';
   `,
   host: {
     '[class]': '"btn btn--" + variant() + " btn--" + size()',
-    '[disabled]': 'disabled() || loading()',
+    '[attr.disabled]': '(disabled() || loading()) ? true : null',
     '[attr.aria-busy]': 'loading()',
+    '[attr.aria-disabled]': 'disabled() || loading()',
   },
   styles: [`
     :host {

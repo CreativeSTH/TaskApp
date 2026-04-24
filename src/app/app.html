@@ -1,18 +1,17 @@
+<app-navbar
+  [theme]="theme()"
+  (themeToggle)="toggleTheme()"
+  (newTask)="openForm()"
+  (search)="null"
+/>
+
 <div class="showcase">
 
-  <header class="showcase__header">
-    <div class="showcase__title">
-      <app-icon name="list-checks" size="lg" />
-      <h1>Design System — Atoms</h1>
-    </div>
-    <button appBtn variant="ghost" size="sm" (click)="toggleTheme()">
-      <app-icon [name]="theme() === 'dark' ? 'sun' : 'moon'" size="sm" />
-      {{ theme() === 'dark' ? 'Light' : 'Dark' }}
-    </button>
-  </header>
+  <!-- ═══════════════ ATOMS ═══════════════ -->
+  <h2 class="group-title">Atoms</h2>
 
   <section class="section">
-    <h2 class="section__title">Button</h2>
+    <h3 class="section__title">Button</h3>
     <div class="row">
       <button appBtn variant="primary">Primary</button>
       <button appBtn variant="secondary">Secondary</button>
@@ -20,37 +19,55 @@
       <button appBtn variant="danger">Danger</button>
     </div>
     <div class="row">
-      <button appBtn variant="primary" size="sm">Small</button>
-      <button appBtn variant="primary" size="md">Medium</button>
-      <button appBtn variant="primary" size="lg">Large</button>
+      <button appBtn size="sm">Small</button>
+      <button appBtn size="md">Medium</button>
+      <button appBtn size="lg">Large</button>
+      <button appBtn [loading]="true">Loading</button>
+      <button appBtn [disabled]="true" variant="secondary">Disabled</button>
     </div>
     <div class="row">
-      <button appBtn variant="primary" [loading]="true">Loading</button>
-      <button appBtn variant="secondary" [disabled]="true">Disabled</button>
-      <button appBtn variant="primary">
-        <app-icon name="plus" size="sm" />
-        New Task
-      </button>
-      <button appBtn variant="danger">
-        <app-icon name="trash-2" size="sm" />
-        Delete
-      </button>
+      <button appBtn variant="primary"><app-icon name="plus" size="sm" /> New Task</button>
+      <button appBtn variant="danger"><app-icon name="trash-2" size="sm" /> Delete</button>
+      <button appBtn variant="secondary"><app-icon name="pencil" size="sm" /> Edit</button>
     </div>
   </section>
 
   <section class="section">
-    <h2 class="section__title">Badge</h2>
-    <div class="row">
+    <h3 class="section__title">Badge · Spinner · Checkbox</h3>
+    <div class="row" style="margin-bottom:16px">
       <app-badge label="New" color="info" />
       <app-badge label="Active" color="warning" />
       <app-badge label="Resolved" color="success" />
       <app-badge label="Closed" color="neutral" />
       <app-badge label="Error" color="danger" />
     </div>
+    <div class="row" style="margin-bottom:16px">
+      <app-spinner size="sm" /><app-spinner size="md" /><app-spinner size="lg" />
+    </div>
+    <div class="row">
+      <app-checkbox label="Unchecked" />
+      <app-checkbox label="Completed" />
+      <app-checkbox label="Disabled" [disabled]="true" />
+    </div>
   </section>
 
   <section class="section">
-    <h2 class="section__title">Icon — Lucide</h2>
+    <h3 class="section__title">Input · Textarea</h3>
+    <div class="two-col">
+      <div class="col">
+        <app-input placeholder="Normal input..." />
+        <app-input placeholder="Error state..." [hasError]="true" />
+        <app-input placeholder="Disabled..." [disabled]="true" />
+      </div>
+      <div class="col">
+        <app-textarea placeholder="Normal textarea..." />
+        <app-textarea placeholder="Error state..." [hasError]="true" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Icon — Lucide</h3>
     <div class="row row--wrap">
       @for (icon of previewIcons; track icon) {
         <div class="icon-item">
@@ -61,40 +78,87 @@
     </div>
   </section>
 
+  <!-- ═══════════════ MOLECULES ═══════════════ -->
+  <h2 class="group-title">Molecules</h2>
+
   <section class="section">
-    <h2 class="section__title">Spinner</h2>
+    <h3 class="section__title">Form Field · Search Bar · Task Status Tag</h3>
+    <div class="two-col" style="margin-bottom:16px">
+      <app-form-field label="Task Title" [required]="true">
+        <app-input placeholder="Enter title..." />
+      </app-form-field>
+      <app-form-field label="Description" errorMessage="Field is required.">
+        <app-input placeholder="Describe the task..." [hasError]="true" />
+      </app-form-field>
+    </div>
+    <div style="max-width:380px;margin-bottom:16px">
+      <app-search-bar />
+    </div>
     <div class="row">
-      <app-spinner size="sm" />
-      <app-spinner size="md" />
-      <app-spinner size="lg" />
+      @for (s of states; track s) {
+        <app-task-status-tag [state]="s" />
+      }
     </div>
   </section>
 
   <section class="section">
-    <h2 class="section__title">Input</h2>
-    <div class="col">
-      <app-input placeholder="Normal input..." />
-      <app-input placeholder="Error state..." [hasError]="true" />
-      <app-input placeholder="Disabled..." [disabled]="true" />
-      <app-input type="date" />
+    <h3 class="section__title">Note Field Row · Paginator · Empty State</h3>
+    <div style="max-width:480px;margin-bottom:16px">
+      <app-note-field-row [control]="noteCtrl" [removable]="false" />
+    </div>
+    <div style="margin-bottom:16px">
+      <app-paginator [currentPage]="currentPage()" [totalPages]="5"
+        (pageChange)="onPageChange($event)" />
+    </div>
+    <app-empty-state icon="list-checks" title="No tasks found"
+      description="Try adjusting your search or create a new task.">
+      <button appBtn variant="primary" size="sm" style="margin-top:8px">
+        <app-icon name="plus" size="sm" /> New Task
+      </button>
+    </app-empty-state>
+  </section>
+
+  <!-- ═══════════════ ORGANISMS ═══════════════ -->
+  <h2 class="group-title">Organisms</h2>
+
+  <section class="section">
+    <h3 class="section__title">Task Card</h3>
+    <div class="cards-grid">
+      <app-task-card [task]="mockTask" />
+      <app-task-card [task]="mockCompletedTask" />
     </div>
   </section>
 
   <section class="section">
-    <h2 class="section__title">Textarea</h2>
-    <div class="col">
-      <app-textarea placeholder="Write your notes here..." />
-      <app-textarea placeholder="Error state..." [hasError]="true" />
+    <h3 class="section__title">Toast Notifications</h3>
+    <div class="row">
+      <button appBtn variant="secondary" size="sm" (click)="showToast('success')">
+        <app-icon name="circle-check" size="sm" /> Success
+      </button>
+      <button appBtn variant="secondary" size="sm" (click)="showToast('error')">
+        <app-icon name="circle-alert" size="sm" /> Error
+      </button>
+      <button appBtn variant="secondary" size="sm" (click)="showToast('warning')">
+        <app-icon name="triangle-alert" size="sm" /> Warning
+      </button>
+      <button appBtn variant="secondary" size="sm" (click)="showToast('info')">
+        <app-icon name="info" size="sm" /> Info
+      </button>
     </div>
   </section>
 
   <section class="section">
-    <h2 class="section__title">Checkbox</h2>
-    <div class="col">
-      <app-checkbox label="Unchecked" />
-      <app-checkbox label="Task completed" />
-      <app-checkbox label="Disabled" [disabled]="true" />
+    <h3 class="section__title">Task Form</h3>
+    <div class="form-preview">
+      <app-task-form
+        [availableStates]="mockStates"
+        [taskToEdit]="editingTask()"
+        (cancel)="closeForm()"
+        (formSubmit)="showToast('success')"
+      />
     </div>
   </section>
 
 </div>
+
+<app-toast />

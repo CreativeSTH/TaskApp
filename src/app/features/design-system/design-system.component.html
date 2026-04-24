@@ -1,0 +1,270 @@
+<div class="ds-page">
+
+  <header class="ds-header">
+    <div class="ds-header__brand">
+      <app-icon name="layout-panel-left" size="md" />
+      <div>
+        <h1 class="ds-header__title">Design System</h1>
+        <p class="ds-header__subtitle">TaskFlow — Component Library</p>
+      </div>
+    </div>
+    <a routerLink="/" appBtn variant="secondary" size="sm">
+      <app-icon name="arrow-left" size="sm" /> Back to App
+    </a>
+  </header>
+
+  <!-- ══════════════════════════════════════════
+       ATOMS
+  ══════════════════════════════════════════ -->
+  <h2 class="group-title">Atoms</h2>
+
+  <section class="section">
+    <h3 class="section__title">Button</h3>
+    <div class="row">
+      <button appBtn variant="primary">Primary</button>
+      <button appBtn variant="secondary">Secondary</button>
+      <button appBtn variant="ghost">Ghost</button>
+      <button appBtn variant="danger">Danger</button>
+    </div>
+    <div class="row">
+      <button appBtn size="sm">Small</button>
+      <button appBtn size="md">Medium</button>
+      <button appBtn size="lg">Large</button>
+      <button appBtn [loading]="true">Loading</button>
+      <button appBtn [disabled]="true" variant="secondary">Disabled</button>
+    </div>
+    <div class="row">
+      <button appBtn variant="primary"><app-icon name="plus" size="sm" /> New Task</button>
+      <button appBtn variant="danger"><app-icon name="trash-2" size="sm" /> Delete</button>
+      <button appBtn variant="secondary"><app-icon name="pencil" size="sm" /> Edit</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Badge</h3>
+    <div class="row">
+      <app-badge label="New" color="info" />
+      <app-badge label="Active" color="warning" />
+      <app-badge label="Resolved" color="success" />
+      <app-badge label="Closed" color="neutral" />
+      <app-badge label="Error" color="danger" />
+    </div>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Icon — Lucide</h3>
+    <div class="row row--wrap">
+      @for (icon of previewIcons; track icon) {
+        <div class="icon-item">
+          <app-icon [name]="icon" size="md" />
+          <span>{{ icon }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Spinner</h3>
+    <div class="row">
+      <div class="spinner-demo">
+        <app-spinner size="sm" />
+        <span>Small</span>
+      </div>
+      <div class="spinner-demo">
+        <app-spinner size="md" />
+        <span>Medium</span>
+      </div>
+      <div class="spinner-demo">
+        <app-spinner size="lg" />
+        <span>Large</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Input</h3>
+    <div class="two-col">
+      <app-input placeholder="Normal input..." />
+      <app-input placeholder="Error state..." [hasError]="true" />
+      <app-input placeholder="Disabled..." [disabled]="true" />
+      <app-input type="date" />
+    </div>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Textarea</h3>
+    <div class="two-col">
+      <app-textarea placeholder="Normal textarea..." />
+      <app-textarea placeholder="Error state..." [hasError]="true" />
+    </div>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Checkbox</h3>
+    <div class="row">
+      <app-checkbox label="Unchecked" />
+      <app-checkbox label="Task completed" />
+      <app-checkbox label="Disabled" [disabled]="true" />
+    </div>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Skeleton</h3>
+    <div class="skeleton-demo">
+
+      <div class="skeleton-card">
+        <div class="skeleton-card__header">
+          <app-skeleton shape="line" width="80px" height="22px" />
+        </div>
+        <div class="skeleton-card__body">
+          <app-skeleton shape="line" width="75%" height="16px" />
+          <app-skeleton shape="line" width="55%" height="14px" />
+          <app-skeleton shape="line" width="60%" height="14px" />
+          <app-skeleton shape="line" width="100px" height="12px" />
+        </div>
+        <div class="skeleton-card__footer">
+          <app-skeleton shape="rect" width="64px" height="30px" />
+          <app-skeleton shape="rect" width="64px" height="30px" />
+        </div>
+      </div>
+
+      <div class="skeleton-extras">
+        <div class="skeleton-row">
+          <app-skeleton shape="circle" width="40px" height="40px" />
+          <div class="skeleton-lines">
+            <app-skeleton shape="line" width="120px" height="14px" />
+            <app-skeleton shape="line" width="80px" height="12px" />
+          </div>
+        </div>
+        <app-skeleton shape="rect" width="100%" height="80px" />
+        <app-skeleton shape="line" width="90%" />
+        <app-skeleton shape="line" width="65%" />
+        <app-skeleton shape="line" width="78%" />
+      </div>
+
+    </div>
+    <p class="demo-hint" style="margin-top:16px">
+      <app-icon name="info" size="xs" />
+      Shapes: <strong>line</strong> · <strong>circle</strong> · <strong>rect</strong> — shimmer animation via CSS gradient
+    </p>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       MOLECULES
+  ══════════════════════════════════════════ -->
+  <h2 class="group-title">Molecules</h2>
+
+  <section class="section">
+    <h3 class="section__title">Form Field</h3>
+    <div class="two-col">
+      <app-form-field label="Task Title" [required]="true">
+        <app-input placeholder="Enter task title..." />
+      </app-form-field>
+      <app-form-field label="Description" errorMessage="This field is required.">
+        <app-input placeholder="Describe the task..." [hasError]="true" />
+      </app-form-field>
+    </div>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Search Bar</h3>
+    <div class="search-demo">
+      <app-search-bar />
+      <p class="demo-hint">
+        <app-icon name="info" size="xs" />
+        Type to search · Click × to clear
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Task Status Tag</h3>
+    <div class="row">
+      @for (s of states; track s) {
+        <app-task-status-tag [state]="s" />
+      }
+    </div>
+    <p class="demo-hint" style="margin-top:12px">
+      <app-icon name="info" size="xs" />
+      Maps task state to icon + badge color automatically
+    </p>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Note Field Row</h3>
+    <div class="note-demo">
+      <app-note-field-row [control]="noteCtrl" [removable]="false" />
+      <p class="demo-hint">
+        <app-icon name="info" size="xs" />
+        First note is required · [removable]="false" hides delete button
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Paginator</h3>
+    <div class="paginator-demo">
+      <app-paginator
+        [currentPage]="currentPage()"
+        [totalPages]="5"
+        (pageChange)="onPageChange($event)"
+      />
+      <span class="demo-hint">Page {{ currentPage() }} of 5</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Empty State</h3>
+    <app-empty-state
+      icon="list-checks"
+      title="No tasks found"
+      description="Try adjusting your search or create a new task to get started.">
+      <button appBtn variant="primary" size="sm" style="margin-top:8px">
+        <app-icon name="plus" size="sm" /> New Task
+      </button>
+    </app-empty-state>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       ORGANISMS
+  ══════════════════════════════════════════ -->
+  <h2 class="group-title">Organisms</h2>
+
+  <section class="section">
+    <h3 class="section__title">Task Card</h3>
+    <div class="cards-grid">
+      <app-task-card [task]="mockTask" />
+      <app-task-card [task]="mockCompletedTask" />
+    </div>
+    <p class="demo-hint" style="margin-top:16px">
+      <app-icon name="info" size="xs" />
+      Notes section uses <strong>&#64;defer (on interaction)</strong> — code loads only on click
+    </p>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Toast Notifications</h3>
+    <div class="row">
+      <button appBtn variant="secondary" size="sm" (click)="showToast('success')">
+        <app-icon name="circle-check" size="sm" /> Success
+      </button>
+      <button appBtn variant="secondary" size="sm" (click)="showToast('error')">
+        <app-icon name="circle-alert" size="sm" /> Error
+      </button>
+      <button appBtn variant="secondary" size="sm" (click)="showToast('warning')">
+        <app-icon name="triangle-alert" size="sm" /> Warning
+      </button>
+      <button appBtn variant="secondary" size="sm" (click)="showToast('info')">
+        <app-icon name="info" size="sm" /> Info
+      </button>
+    </div>
+  </section>
+
+  <section class="section">
+    <h3 class="section__title">Task Form</h3>
+    <div class="form-preview">
+      <app-task-form [availableStates]="mockStates" (cancel)="showToast('info')" (formSubmit)="showToast('success')" />
+    </div>
+  </section>
+
+</div>
