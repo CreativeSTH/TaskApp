@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TaskStore } from '../../../../data-access/task.store';
 import { Task, TaskFormValue, TaskStateName } from '../../../../core/models/task.model';
+import { ToastService } from '../../../../core/services/toast.service';
 import { TaskListTemplateComponent } from '../../templates/task-list-template/task-list-template.component';
 import { KanbanColumnComponent, TaskDropEvent } from '../../../../shared/ui/organisms/kanban-column/kanban-column.component';
 import { TaskFormComponent } from '../../../../shared/ui/organisms/task-form/task-form.component';
@@ -74,12 +75,12 @@ const STATES: TaskStateName[] = ['new', 'active', 'resolved', 'closed'];
 
     @defer (when showForm()) {
       @if (showForm()) {
-        <app-modal-shell (overlayClick)="closeForm()">
+        <app-modal-shell (overlayClick)="cancelForm()">
           <app-task-form
             [taskToEdit]="taskToEdit()"
             [availableStates]="store.availableStates()"
             (formSubmit)="handleSubmit($event)"
-            (cancel)="closeForm()"
+            (cancel)="cancelForm()"
           />
         </app-modal-shell>
       }
@@ -108,13 +109,14 @@ const STATES: TaskStateName[] = ['new', 'active', 'resolved', 'closed'];
 })
 export class TaskListPageComponent {
   protected store  = inject(TaskStore);
+  private   toast  = inject(ToastService);
   protected states = STATES;
 
-  protected theme         = signal<'dark' | 'light'>('dark');
-  protected selectedState = signal<TaskStateName>('new');
-  protected showForm      = signal(false);
-  protected showConfirm   = signal(false);
-  protected taskToEdit    = signal<Task | null>(null);
+  protected theme           = signal<'dark' | 'light'>('dark');
+  protected selectedState   = signal<TaskStateName>('new');
+  protected showForm        = signal(false);
+  protected showConfirm     = signal(false);
+  protected taskToEdit      = signal<Task | null>(null);
   protected pendingDeleteId = signal<string | null>(null);
 
   protected countByState = computed(() => {
@@ -142,7 +144,8 @@ export class TaskListPageComponent {
     this.showForm.set(true);
   }
 
-  protected closeForm(): void {
+  protected cancelForm(): void {
+    this.toast.show('No changes were saved', 'info');
     this.showForm.set(false);
     this.taskToEdit.set(null);
   }
@@ -154,7 +157,8 @@ export class TaskListPageComponent {
     } else {
       this.store.createTask(value);
     }
-    this.closeForm();
+    this.showForm.set(false);
+    this.taskToEdit.set(null);
   }
 
   protected requestDelete(id: string): void {
@@ -165,10 +169,12 @@ export class TaskListPageComponent {
   protected confirmDelete(): void {
     const id = this.pendingDeleteId();
     if (id) this.store.deleteTask(id);
-    this.cancelDelete();
+    this.showConfirm.set(false);
+    this.pendingDeleteId.set(null);
   }
 
   protected cancelDelete(): void {
+    this.toast.show('Deletion cancelled', 'info');
     this.showConfirm.set(false);
     this.pendingDeleteId.set(null);
   }

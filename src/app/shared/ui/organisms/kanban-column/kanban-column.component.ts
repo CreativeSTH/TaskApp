@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { CdkDropList, CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDropList, CdkDrag, CdkDragDrop, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 import { Task, TaskStateName } from '../../../../core/models/task.model';
 import { TaskCardComponent } from '../task-card/task-card.component';
 import { TaskStatusTagComponent } from '../../molecules/task-status-tag/task-status-tag.component';
 import { PaginatorComponent } from '../../molecules/paginator/paginator.component';
 import { EmptyStateComponent } from '../../molecules/empty-state/empty-state.component';
-import { ButtonComponent } from '../../atoms/button/button.component';
-import { IconComponent } from '../../atoms/icon/icon.component';
 
 const EMPTY_CONFIG: Record<TaskStateName, { icon: string }> = {
   new:      { icon: 'clock' },
@@ -25,9 +23,9 @@ export interface TaskDropEvent {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CdkDropList, CdkDrag,
+    CdkDropList, CdkDrag, CdkDragPlaceholder,
     TaskCardComponent, TaskStatusTagComponent, PaginatorComponent,
-    EmptyStateComponent, ButtonComponent, IconComponent,
+    EmptyStateComponent,
   ],
   template: `
     <div class="column">

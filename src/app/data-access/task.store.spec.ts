@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { TaskStore } from './task.store';
+import { TaskStore, STORE_INIT_DELAY } from './task.store';
 import { Task, StateDefinition } from '../core/models/task.model';
 
 const mockStates: StateDefinition[] = [
@@ -33,6 +33,7 @@ describe('TaskStore', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         TaskStore,
+        { provide: STORE_INIT_DELAY, useValue: 0 },
       ],
     });
     store = TestBed.inject(TaskStore);
