@@ -310,6 +310,22 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       border-top: 1px solid var(--glass-border);
       justify-content: flex-end;
     }
+
+    :host-context([data-theme="dark"]) {
+      .card__notes-list li {
+        opacity: 1;
+        color: oklch(72% 0.02 260);
+      }
+
+      .card__timeline-date {
+        color: var(--text-secondary);
+      }
+
+      .card__section-label {
+        color: var(--text-secondary);
+        &:hover { color: var(--text-primary); }
+      }
+    }
   `],
 })
 export class TaskCardComponent {

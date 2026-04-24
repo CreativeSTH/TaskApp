@@ -63,7 +63,15 @@ import { TaskStateName } from '../../../../core/models/task.model';
     </div>
   `,
   styles: [`
-    :host { display: block; min-height: 100dvh; background: var(--bg-page); }
+    :host {
+      display: block;
+      min-height: 100dvh;
+      background:
+        radial-gradient(ellipse at 20% 20%, var(--mesh-color-1) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, var(--mesh-color-2) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, var(--mesh-color-3) 0%, transparent 60%),
+        var(--bg-page);
+    }
 
     .layout {
       display: flex;
