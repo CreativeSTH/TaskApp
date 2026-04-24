@@ -8,12 +8,12 @@ import { IconComponent } from '../../atoms/icon/icon.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ButtonComponent, IconComponent],
   template: `
-    <div class="dialog">
-      <div class="dialog__icon">
+    <div class="dialog" role="alertdialog" aria-labelledby="dialog-title" aria-describedby="dialog-msg">
+      <div class="dialog__icon" aria-hidden="true">
         <app-icon name="trash-2" size="md" />
       </div>
-      <h2 class="dialog__title">{{ title() }}</h2>
-      <p class="dialog__message">{{ message() }}</p>
+      <h2 id="dialog-title" class="dialog__title">{{ title() }}</h2>
+      <p id="dialog-msg" class="dialog__message">{{ message() }}</p>
       <div class="dialog__actions">
         <button appBtn variant="secondary" (click)="cancel.emit()">
           Cancel

@@ -14,6 +14,22 @@
         {
           "state": "active",
           "date": "2023-12-05"
+        },
+        {
+          "state": "resolved",
+          "date": "2026-04-24"
+        },
+        {
+          "state": "new",
+          "date": "2026-04-24"
+        },
+        {
+          "state": "active",
+          "date": "2026-04-24"
+        },
+        {
+          "state": "closed",
+          "date": "2026-04-24"
         }
       ],
       "notes": [
@@ -144,5 +160,6 @@
       "name": "closed",
       "id": "58ae"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

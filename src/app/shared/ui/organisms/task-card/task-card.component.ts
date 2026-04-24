@@ -3,6 +3,7 @@ import { Task } from '../../../../core/models/task.model';
 import { TaskStatusTagComponent } from '../../molecules/task-status-tag/task-status-tag.component';
 import { ButtonComponent } from '../../atoms/button/button.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
+
 @Component({
   selector: 'app-task-card',
   standalone: true,
@@ -31,24 +32,56 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       </div>
 
       @if (task().notes.length > 0) {
-        @if (showNotes()) {
-          <div class="card__notes">
-            <button class="card__notes-label" (click)="showNotes.set(false)">
-              <app-icon name="file-text" size="xs" />
-              Notes
-              <app-icon name="chevron-up" size="xs" class="card__notes-chevron" />
+        @defer (when showNotes(); prefetch on idle) {
+          @if (showNotes()) {
+            <div class="card__section">
+              <button class="card__section-label" aria-expanded="true" (click)="showNotes.set(false)">
+                <app-icon name="file-text" size="xs" aria-hidden="true" />
+                Notes
+                <app-icon name="chevron-up" size="xs" class="card__chevron-right" aria-hidden="true" />
+              </button>
+              <ul class="card__notes-list">
+                @for (note of task().notes; track $index) {
+                  <li>{{ note }}</li>
+                }
+              </ul>
+            </div>
+          }
+        }
+        @if (!showNotes()) {
+          <button class="card__trigger" aria-expanded="false" (click)="showNotes.set(true)">
+            <app-icon name="file-text" size="xs" aria-hidden="true" />
+            Show {{ task().notes.length }} {{ task().notes.length === 1 ? 'note' : 'notes' }}
+            <app-icon name="chevron-down" size="xs" aria-hidden="true" />
+          </button>
+        }
+      }
+
+      @if (task().stateHistory.length > 1) {
+        @if (showHistory()) {
+          <div class="card__section">
+            <button class="card__section-label" aria-expanded="true" (click)="showHistory.set(false)">
+              <app-icon name="clock" size="xs" aria-hidden="true" />
+              History
+              <app-icon name="chevron-up" size="xs" class="card__chevron-right" aria-hidden="true" />
             </button>
-            <ul class="card__notes-list">
-              @for (note of task().notes; track $index) {
-                <li>{{ note }}</li>
+            <ol class="card__timeline">
+              @for (entry of task().stateHistory; track $index) {
+                <li class="card__timeline-item" [class.card__timeline-item--last]="$last">
+                  <span class="card__timeline-dot"></span>
+                  <div class="card__timeline-content">
+                    <app-task-status-tag [state]="entry.state" />
+                    <span class="card__timeline-date">{{ entry.date }}</span>
+                  </div>
+                </li>
               }
-            </ul>
+            </ol>
           </div>
         } @else {
-          <button class="card__notes-trigger" (click)="showNotes.set(true)">
-            <app-icon name="file-text" size="xs" />
-            Show {{ task().notes.length }} {{ task().notes.length === 1 ? 'note' : 'notes' }}
-            <app-icon name="chevron-down" size="xs" />
+          <button class="card__trigger" aria-expanded="false" (click)="showHistory.set(true)">
+            <app-icon name="clock" size="xs" aria-hidden="true" />
+            {{ task().stateHistory.length }} state changes
+            <app-icon name="chevron-down" size="xs" aria-hidden="true" />
           </button>
         }
       }
@@ -150,13 +183,13 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       margin-top: 4px;
     }
 
-    .card__notes {
+    .card__section {
       padding: 12px 20px;
       border-top: 1px solid var(--glass-border);
       animation: fade-in 0.2s ease both;
     }
 
-    .card__notes-label {
+    .card__section-label {
       display: flex;
       align-items: center;
       gap: 5px;
@@ -166,7 +199,7 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       background: none;
       border: none;
       padding: 0;
@@ -176,7 +209,7 @@ import { IconComponent } from '../../atoms/icon/icon.component';
 
       &:hover { color: var(--text-secondary); }
 
-      .card__notes-chevron { margin-left: auto; }
+      .card__chevron-right { margin-left: auto; }
     }
 
     .card__notes-list {
@@ -195,7 +228,7 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       }
     }
 
-    .card__notes-trigger {
+    .card__trigger {
       width: 100%;
       display: flex;
       align-items: center;
@@ -217,7 +250,60 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       }
     }
 
-.card__footer {
+    .card__timeline {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .card__timeline-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      position: relative;
+      padding-bottom: 12px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: 16px;
+        bottom: 0;
+        width: 1px;
+        background: var(--glass-border);
+      }
+
+      &--last {
+        padding-bottom: 0;
+        &::before { display: none; }
+      }
+    }
+
+    .card__timeline-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      border: 2px solid var(--glass-border);
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .card__timeline-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .card__timeline-date {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card__footer {
       display: flex;
       gap: 8px;
       padding: 12px 16px;
@@ -236,5 +322,6 @@ export class TaskCardComponent {
     () => this.task().stateHistory.at(-1)?.state ?? 'new'
   );
 
-  protected showNotes = signal(false);
+  protected showNotes   = signal(false);
+  protected showHistory = signal(false);
 }

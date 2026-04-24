@@ -5,9 +5,11 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="overlay" (click)="overlayClick.emit()">
+    <div class="overlay" role="presentation" (click)="overlayClick.emit()" (keydown.escape)="overlayClick.emit()">
       <div
         class="panel"
+        role="dialog"
+        aria-modal="true"
         [class.panel--sm]="size() === 'sm'"
         (click)="$event.stopPropagation()"
       >
