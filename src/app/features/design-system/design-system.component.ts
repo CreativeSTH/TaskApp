@@ -17,6 +17,8 @@ import { TaskStatusTagComponent } from '../../shared/ui/molecules/task-status-ta
 import { NoteFieldRowComponent } from '../../shared/ui/molecules/note-field-row/note-field-row.component';
 import { PaginatorComponent } from '../../shared/ui/molecules/paginator/paginator.component';
 import { EmptyStateComponent } from '../../shared/ui/molecules/empty-state/empty-state.component';
+import { ModalShellComponent } from '../../shared/ui/molecules/modal-shell/modal-shell.component';
+import { ConfirmDialogComponent } from '../../shared/ui/molecules/confirm-dialog/confirm-dialog.component';
 
 import { TaskCardComponent } from '../../shared/ui/organisms/task-card/task-card.component';
 import { TaskFormComponent } from '../../shared/ui/organisms/task-form/task-form.component';
@@ -35,6 +37,7 @@ import { StateDefinition, Task, TaskStateName } from '../../core/models/task.mod
     SpinnerComponent, InputComponent, TextareaComponent, CheckboxComponent,
     FormFieldComponent, SearchBarComponent, TaskStatusTagComponent,
     NoteFieldRowComponent, PaginatorComponent, EmptyStateComponent,
+    ModalShellComponent, ConfirmDialogComponent,
     TaskCardComponent, TaskFormComponent,
   ],
   templateUrl: './design-system.component.html',
@@ -83,6 +86,8 @@ export class DesignSystemComponent {
     'chevron-right', 'chevron-down', 'sun', 'moon', 'circle-alert',
     'info', 'triangle-alert', 'list-checks', 'sliders-horizontal', 'move-right',
   ];
+
+  protected showConfirmDemo = signal(false);
 
   protected onPageChange(p: number): void { this.currentPage.set(p); }
 

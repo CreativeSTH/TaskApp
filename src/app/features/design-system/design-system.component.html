@@ -225,6 +225,19 @@
     </app-empty-state>
   </section>
 
+  <section class="section">
+    <h3 class="section__title">Modal Shell + Confirm Dialog</h3>
+    <div class="row">
+      <button appBtn variant="secondary" size="sm" (click)="showConfirmDemo.set(true)">
+        <app-icon name="layout-panel-left" size="sm" /> Open Confirm Dialog
+      </button>
+      <p class="demo-hint">
+        <app-icon name="info" size="xs" />
+        Glass overlay · click backdrop or Cancel to close
+      </p>
+    </div>
+  </section>
+
   <!-- ══════════════════════════════════════════
        ORGANISMS
   ══════════════════════════════════════════ -->
@@ -268,3 +281,14 @@
   </section>
 
 </div>
+
+@if (showConfirmDemo()) {
+  <app-modal-shell size="sm" (overlayClick)="showConfirmDemo.set(false)">
+    <app-confirm-dialog
+      title="Delete task?"
+      message="This action is permanent and cannot be undone."
+      (confirm)="showConfirmDemo.set(false); showToast('success')"
+      (cancel)="showConfirmDemo.set(false)"
+    />
+  </app-modal-shell>
+}
